@@ -29,7 +29,7 @@
                                     <div class="row">
                                         <div class="col-sm-12 col-md-12">
                                             @if($sudah_pulang==false)
-                                            <a href="<?=$sudah_masuk==true?'/pulang':'/masuk'?>" class="btn btn-<?=$sudah_masuk==true?'danger':'primary'?> btn-lg btn-block"><?=$sudah_masuk==true?'Pulang':'Masuk'?></a>
+                                            <a href="<?=$sudah_masuk==true?'/pulang':'/masuk'?>" class="btn btn-<?=$sudah_masuk==true?'danger':'primary'?> btn-lg btn-block btn-will-disabled"><?=$sudah_masuk==true?'Pulang':'Masuk'?></a>
                                             @else
                                             <a href="#" class="btn btn-secondary btn-lg btn-block btn-disabled">Anda Sudah Pulang</a>
                                             @endif
@@ -56,6 +56,7 @@
                                             <table class="table table-bordered table-striped table-condensed">
                                                 <thead>
                                                     <tr>
+                                                        <th>Tanggal</th>
                                                         <th>Masuk</th>
                                                         <th>Pulang</th>
                                                     </tr>
@@ -64,13 +65,19 @@
                                                     @if(count($list_presensi)>=1)
                                                         @foreach($list_presensi as $presensi)
                                                         <tr>
-                                                            <td>{{$presensi->masuk}}</td>
-                                                            <td>{{$presensi->pulang}}</td>
+                                                            <td>{{$presensi->tanggal_masuk}}</td>
+                                                            <td>{{substr($presensi->jam_masuk,0,5)}}</td>
+                                                            <td>
+                                                                <?php
+                                                                if($presensi->jam_pulang!=null) echo substr($presensi->jam_pulang,0,5);
+                                                                else echo substr($presensi->jam_pulang_temp,0,5).' (Jam otomatis)';
+                                                                ?>
+                                                            </td>
                                                         </tr>
                                                         @endforeach
                                                     @else
                                                         <tr>
-                                                            <td colspan="2">Tidak ada data presensi</td>
+                                                            <td colspan="3">Tidak ada data presensi</td>
                                                         </tr>
                                                     @endif
                                                 </tbody>

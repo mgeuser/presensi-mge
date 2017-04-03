@@ -56,7 +56,7 @@ class GeneralController extends Controller
     {
         $this->cekSesi2($request);
         $data['TAG'] = 'beranda';
-        $data['list_presensi'] = Presensi::where('user_id',session('id'))->get();
+        $data['list_presensi'] = Presensi::where('user_id',session('id'))->where('bulan_masuk',\Carbon\Carbon::now()->month)->get();
         $presensi = Presensi::where('user_id',session('id'))->whereRaw('Date(masuk) = CURDATE()')->first();
         $data['sudah_masuk'] = false;
         $data['sudah_pulang'] = false;
@@ -73,7 +73,7 @@ class GeneralController extends Controller
     {
         $this->cekSesi3($request);
         $data['list_user'] = User::all();
-        $data['list_presensi'] = Presensi::with('userInfo')->get();
+        $data['list_presensi'] = Presensi::with('userInfo')->whereMonth('masuk','=',\Carbon\Carbon::now()->month)->orWhere(\DB::raw('DATE(masuk)','>',\Carbon\Carbon::now()->addMonths(-1)->toDateString()))->get();
         $data['TAG'] = 'manajemen';
         return view('manajemen',$data);
     }
@@ -87,39 +87,91 @@ class GeneralController extends Controller
     public function masuk(Request $request)
     {
         $this->cekSesi2($request);
+        $now = \Carbon\Carbon::now();
+        $next = \Carbon\Carbon::now()->addHours(8);
         $presensi = new Presensi();
         $presensi->user_id = session('id');
-        $presensi->masuk = \Carbon\Carbon::now();
+        $user = User::find(session('id'));
+        $presensi->masuk = $now;
+        $presensi->jam_pulang_temp = $next->toTimeString();
+        $presensi->jam_masuk = $now->toTimeString();
+        $presensi->tanggal_masuk = $now->toDateString();
+        $presensi->bulan_masuk = $now->month;
+        $presensi->tahun_masuk = $now->year;
         $presensi->save();
+        $data['text'] = User::find(session('id'))->username." masuk kerja pada ".\Carbon\Carbon::now();
+        // \Mail::queue('mail', $data, function($message) use($user){
+        //     $message->to("nandi.kristian@mgesolution.com", "Pak Nandi")->subject("MGE masuk ".$user->username);
+        //     $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        // });
+        // \Mail::queue('mail', $data, function($message) use($user){
+        //     $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE masuk ".$user->username);
+        //     $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        // });
         return redirect()->route('beranda');
     }
 
     public function pulang(Request $request)
     {
         $this->cekSesi2($request);
+        $now = \Carbon\Carbon::now();
         $presensi = Presensi::where('user_id',session('id'))->whereRaw('Date(masuk) = CURDATE()')->where('pulang','=',null)->first();
+        $user = User::find(session('id'));
         if($presensi!=null){
-            $presensi->pulang = \Carbon\Carbon::now();
+            $presensi->pulang = $now;
+            $presensi->jam_pulang = $now->toTimeString();
+            $presensi->tanggal_pulang = $now->toDateString();
+            $presensi->bulan_pulang = $now->month;
+            $presensi->tahun_pulang = $now->year;
             $presensi->save();
         }
+        $data['text'] = User::find(session('id'))->username." pulang kerja pada ".\Carbon\Carbon::now();
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("nandi.kristian@mgesolution.com", "Pak Nandi")->subject("MGE pulang ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE pulang ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
         return redirect()->route('beranda');
     }
 
     public function tambahUser(Request $request)
     {
         $this->cekSesi3($request);
-        User::create([
+        $user = User::create([
             'username'=>$request->input('username'),
             'password'=>bcrypt($request->input('password')),
             'role'=>$request->input('role'),
             'kantor'=>$request->input('kantor')
         ]);
+        $data['text'] = User::find(session('id'))->username." menambah user baru dengan username : ".$request->input('username').", role :  ".$request->input('role').", kantor : ".$request->input('kantor')." dan password : ".$request->input('password')." pada ".\Carbon\Carbon::now();
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("nandi.kristian@mgesolution.com", "Pak Nandi")->subject("MGE tambah user ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE tambah user ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
         return redirect('/manajemen');
     }
 
     public function hapusUser(Request $request, $id)
     {
         $this->cekSesi3($request);
+        $username = User::find($id)->username;
+        $user = User::find(session('id'));
+        $data['text'] = User::find(session('id'))->username." menghapus user ".$username." pada ".\Carbon\Carbon::now();
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("nandi.kristian@mgesolution.com", "Pak Nandi")->subject("MGE hapus user ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE hapus user ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
         User::where('id',$id)->delete();
         return redirect('/manajemen');
     }
@@ -134,6 +186,9 @@ class GeneralController extends Controller
     {
         $this->cekSesi3($request);
         $user = User::find($id);
+        
+        $username = $user->username;
+
         $user->username = $request->input('username');
         $user->role = $request->input('role');
         $user->kantor = $request->input('kantor');
@@ -141,6 +196,15 @@ class GeneralController extends Controller
             $user->password = bcrypt($request->input('password'));
         }
         $user->save();
+        $data['text'] = User::find(session('id'))->username." mengedit user ".$username." pada ".\Carbon\Carbon::now();
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("nandi.kristian@mgesolution.com", "Pak Nandi")->subject("MGE update user ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE update user ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
         return redirect('/manajemen');
     }
 
@@ -163,5 +227,102 @@ class GeneralController extends Controller
     {
         $this->cekSesi3($request);
         return response()->json(Presensi::find($id));
+    }
+
+    public function tambahPresensi(Request $request)
+    {
+        $masuk = \Carbon\Carbon::parse($request->input('masuk'));
+        $pulang = \Carbon\Carbon::parse($request->input('pulang'));
+        // dd($pulang);
+        $presensi = new Presensi();
+        $presensi->user_id = $request->input('user_id');
+        $presensi->masuk = $masuk;
+        $presensi->jam_pulang_temp = $masuk->addHours(8);
+        $presensi->jam_masuk = $masuk->toTimeString();
+        $presensi->tanggal_masuk = $masuk->toDateString();
+        $presensi->bulan_masuk = $masuk->month;
+        $presensi->tahun_masuk = $masuk->year;
+        $presensi->pulang = $pulang;
+        $presensi->jam_pulang = $pulang->toTimeString();
+        $presensi->tanggal_pulang = $pulang->toDateString();
+        $presensi->bulan_pulang = $pulang->month;
+        $presensi->tahun_pulang = $pulang->year;
+        $presensi->save();
+        return redirect('/manajemen');
+    }
+
+    public function presensiPerBulan(Request $request){
+        $this->cekSesi3($request);
+        $data['TAG'] = 'presensiperbulan';
+        $data['presensi'] = collect(Presensi::with('userInfo')->where('bulan_masuk','<>','')->where('tahun_masuk','<>','')->orderBy('tahun_masuk')->get())->groupBy('tahun_masuk')->map(function ($item) {
+            return $item->groupBy('bulan_masuk')->map(function ($item2){
+                return $item2->sortBy('user_id')->sortBy('tanggal_masuk')->groupBy('user_id');
+            });
+        })->toArray();
+        return view('presensiperbulan',$data);
+    }
+
+    public function generatePresensi(){
+        for($i=0;$i<=20;$i++){
+            $now = \Carbon\Carbon::now()->addDays($i);
+            $pulang = \Carbon\Carbon::parse($now)->addHours(4);
+            $presensi = new Presensi();
+            $presensi->user_id = 1; 
+            $presensi->masuk = $now;
+            $presensi->jam_masuk = $now->toTimeString();
+            $presensi->tanggal_masuk = $now->day;
+            $presensi->bulan_masuk = $now->month;
+            $presensi->tahun_masuk = $now->year;
+            $presensi->pulang = $pulang;
+            $presensi->jam_pulang = $pulang->toTimeString();
+            $presensi->tanggal_pulang = $now->day;
+            $presensi->bulan_pulang = $now->month;
+            $presensi->tahun_pulang = $now->year;
+            $presensi->save();
+        }
+    }
+
+    public function exportTable(Request $request){
+        $this->cekSesi3($request);
+        $data['allData'] = User::with('listPresensi')->whereHas('listPresensi',function($q){
+            $q->whereMonth('masuk','=',\Carbon\Carbon::now()->month)->orWhere(\DB::raw('DATE(masuk)','>',\Carbon\Carbon::now()->addMonths(-1)->toDateString()));
+        })->get();
+        // dd($data['allData']);
+        return view('export_table',$data);
+        // $presensi = Presensi::where('user_id',1)->where('tanggal_pulang','<>','null')->get();
+        // echo "<div style='display:inline-table;margin-right:10px;'>";
+        //     foreach($presensi as $p){
+        //         echo $p->tanggal_masuk;
+        //         echo "<br>";
+        //         echo "<br>";
+        //         echo "<br>";
+        //         echo "<br>";
+        //     }
+        // echo "</div>";
+        // echo "<div style='display:inline-table;'>";
+        //     foreach($presensi as $p){
+        //         echo str_replace(":",",",substr($p->jam_masuk,0,5))."<br>";
+        //         echo "00,00<br>";
+        //         echo "00,00<br>";
+        //         echo str_replace(":",",",substr($p->jam_pulang,0,5))."<br>";
+        //     }
+        // echo "</div>";
+    }
+
+    public function normalisasi(Request $request)
+    {
+        $presensi = Presensi::all();
+        foreach ($presensi as $p) {
+            $masuk = \Carbon\Carbon::parse($p->masuk);
+            $p->jam_masuk = $masuk->toTimeString();
+            $p->tanggal_masuk = $masuk->toDateString();
+            $p->bulan_masuk = $masuk->month;
+            $p->tahun_masuk = $masuk->year;
+            $p->tanggal_pulang = $masuk->toDateString();
+            $p->bulan_pulang = $masuk->month;
+            $p->tahun_pulang = $masuk->year;
+            $p->jam_pulang_temp = $masuk->addHours(8)->toTimeString();
+            $p->save();
+        }
     }
 }

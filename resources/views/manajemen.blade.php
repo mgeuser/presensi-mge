@@ -12,44 +12,78 @@
         <div class="animated fadeIn">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <i class="fa fa-align-justify"></i> Tambah User
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#useradd" role="tab" aria-controls="home"> Form User </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#presensiadd" role="tab" aria-controls="profile"> Form Presensi </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="useradd" role="tabpanel">
+                            <form action="" method="post">
+                                <div class="row">
+                                    {{csrf_field()}}
+                                    <div class="form-group col-sm-6">
+                                        <label for="city">Username</label>
+                                        <input type="text" class="form-control" autocomplete="false" placeholder="Username" name="username">
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label for="postal-code">Password</label>
+                                        <input type="password" autocomplete="false" class="form-control" placeholder="Password" name="password">
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label for="postal-code">Role</label>
+                                        <select class="form-control" name="role">
+                                            <option value="admin">Admin</option>
+                                            <option value="standar">Standar</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label for="postal-code">Kantor</label>
+                                        <input type="number" min="1" max="2" class="form-control" placeholder="Kantor" name="kantor">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-primary pull-right">Simpan</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        <div class="card-block">
-                        	<form action="" method="post">
-                        		<div class="row">
-	                            	{{csrf_field()}}
-	                                <div class="form-group col-sm-6">
-	                                    <label for="city">Username</label>
-	                                    <input type="text" class="form-control" autocomplete="false" placeholder="Username" name="username">
-	                                </div>
-	                                <div class="form-group col-sm-6">
-	                                    <label for="postal-code">Password</label>
-	                                    <input type="password" autocomplete="false" class="form-control" placeholder="Password" name="password">
-	                                </div>
-	                                <div class="form-group col-sm-6">
-	                                    <label for="postal-code">Role</label>
-	                                    <select class="form-control" name="role">
-	                                    	<option value="admin">Admin</option>
-	                                    	<option value="standar">Standar</option>
-	                                    </select>
-	                                </div>
-	                                <div class="form-group col-sm-6">
-	                                    <label for="postal-code">Kantor</label>
-	                                    <input type="number" min="1" max="2" class="form-control" placeholder="Kantor" name="kantor">
-	                                </div>
-	                            </div>
-	                            <div class="row">
-	                            	<div class="col-sm-12">
-	                            		<button type="submit" class="btn btn-primary pull-right">Simpan</button>
-	                            	</div>
-	                            </div>
-                        	</form>
+                        <div class="tab-pane" id="presensiadd" role="tabpanel">
+                            <form action="/add_presensi" method="post">
+                                <div class="row">
+                                    {{csrf_field()}}
+                                    <div class="form-group col-sm-12">
+                                        <label for="city">Username</label>
+                                        <select class="form-control" name="user_id">
+                                            @foreach($list_user as $user)
+                                            <option value="{{$user->id}}">{{$user->username}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label for="postal-code">Masuk</label>
+                                        <input type="text" autocomplete="false" class="form-control singletime" placeholder="Waktu Masuk" name="masuk">
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label for="postal-code">Pulang</label>
+                                        <input type="text" autocomplete="false" class="form-control singletime" placeholder="Waktu Pulang" name="pulang">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-primary pull-right">Simpan</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
+            <br>
             <div class="row">
                 <div class="col-md-12 mb-2">
                     <ul class="nav nav-tabs" role="tablist">
@@ -58,6 +92,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#profile4" role="tab" aria-controls="profile"> Data Presensi </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#export" role="tab" aria-controls="export"> Export Table </a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -93,6 +130,7 @@
                                 <thead>
                                     <tr>
                                         <th>Username</th>
+                                        <th>Tanggal</th>
                                         <th>Masuk</th>
                                         <th>Pulang</th>
                                         <th width="5%"></th>
@@ -102,8 +140,14 @@
                                     @foreach($list_presensi as $presensi)
                                     <tr>
                                     	<td>{{$presensi->userInfo->username}}</td>
-                                    	<td>{{$presensi->masuk}}</td>
-                                    	<td>{{$presensi->pulang}}</td>
+                                        <td>{{$presensi->tanggal_masuk}}</td>
+                                    	<td>{{substr($presensi->jam_masuk,0,5)}}</td>
+                                    	<td>
+                                            <?php
+                                            if($presensi->jam_pulang!=null) echo substr($presensi->jam_pulang,0,5);
+                                            else echo substr($presensi->jam_pulang_temp,0,5).' (Jam otomatis)';
+                                            ?>
+                                        </td>
                                     	<td>
                                     		<div class="btn-group">
                                     			<button data-toggle="modal" data-target="#largeModal2" class="btn btn-primary btn-sm btn-edit-presensi" data-id="{{$presensi->id}}">Edit</button>
@@ -114,6 +158,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="tab-pane" id="export" role="tabpanel">
+                            <iframe src="/export_table" style="width:100%;height: 500px;"></iframe>
                         </div>
                     </div>
                 </div>

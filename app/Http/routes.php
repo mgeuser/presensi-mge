@@ -26,9 +26,15 @@ Route::get('/', [
 
 Route::get('/manajemen','GeneralController@manajemen');
 Route::post('/manajemen','GeneralController@tambahUser');
+Route::post('/add_presensi','GeneralController@tambahPresensi');
 Route::get('/delete_user/{id}','GeneralController@hapusUser');
 Route::get('/single_user/{id?}','GeneralController@getSingleUser');
 Route::get('/single_presensi/{id?}','GeneralController@getSinglePresensi');
 Route::post('/update_user/{id?}','GeneralController@updateUser');
 Route::post('/update_presensi/{id?}','GeneralController@updatePresensi');
 Route::get('/delete_presensi/{id?}','GeneralController@deletePresensi');
+Route::get('/presensibulanan','GeneralController@presensiPerbulan');
+
+Route::get('generate_presensi_cuy','GeneralController@generatePresensi');
+Route::get('export_table','GeneralController@exportTable');
+Route::get('normalisasi','GeneralController@normalisasi');

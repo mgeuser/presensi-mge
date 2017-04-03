@@ -19,6 +19,7 @@
 
     <!-- Main styles for this application -->
     <link href="/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/daterangepicker/daterangepicker.css">
     <style type="text/css">
         .breadcrumb-menu.hidden-md-down{
             display: none;
@@ -65,6 +66,9 @@
                     <li class="nav-item">
                         <a class="nav-link <?php if($TAG=='manajemen') echo 'active'; ?>" href="/manajemen"><i class="icon-layers"></i> Management</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php if($TAG=='presensibulanan') echo 'active'; ?>" href="/presensibulanan"><i class="icon-layers"></i> Presensi Bulanan</a>
+                    </li>
                     @endif
                 </ul>
             </nav>
@@ -86,16 +90,16 @@
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/tether/dist/js/tether.min.js"></script>
     <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/bower_components/pace/pace.min.js"></script>
+    <!-- <script src="/bower_components/pace/pace.min.js"></script> -->
 
 
     <!-- Plugins and scripts required by all views -->
-    <script src="/bower_components/chart.js/dist/Chart.min.js"></script>
+    <!-- <script src="/bower_components/chart.js/dist/Chart.min.js"></script> -->
 
 
     <!-- GenesisUI main scripts -->
 
-    <script src="/js/app.js"></script>
+    <!-- <script src="/js/app.js"></script> -->
 
 
 
@@ -104,7 +108,25 @@
     <!-- Plugins and scripts required by this views -->
 
     <!-- Custom scripts required by this view -->
-    <script src="/js/views/main.js"></script>
+    <!-- <script src="/js/views/main.js"></script> -->
+    <script type="text/javascript" src="/daterangepicker/moment.min.js"></script>
+    <script type="text/javascript" src="/daterangepicker/daterangepicker.js"></script>
+    <script>
+        $(".btn-will-disabled").click(function(){
+            $(this).text("Sek, ojo di klik maneh, sabar \n ngko lek error lak ketok ;) ");
+            $(this).attr('disabled','disabled');
+        });
+
+        $('input.singletime').daterangepicker({
+            locale: {
+                format: 'YYYY-MM-DD HH:mm'
+            },
+            timePicker24Hour:true,
+            timePicker: true,
+            timePickerIncrement: 10,
+            singleDatePicker: true
+        });
+    </script>
     @yield('script')
 </body>
 
