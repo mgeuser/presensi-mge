@@ -35,6 +35,7 @@ Route::post('/update_presensi/{id?}','GeneralController@updatePresensi');
 Route::get('/delete_presensi/{id?}','GeneralController@deletePresensi');
 Route::get('/presensibulanan','GeneralController@presensiPerbulan');
 Route::get('/bookmark','GeneralController@bookmark');
+Route::post('/bookmark','GeneralController@tambahBookmark');
 
 Route::get('generate_presensi_cuy','GeneralController@generatePresensi');
 Route::get('export_table','GeneralController@exportTable');

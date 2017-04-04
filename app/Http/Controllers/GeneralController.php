@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Presensi;
+use App\Bookmark;
 class GeneralController extends Controller
 {
 	private function cekSesi($request){
@@ -272,8 +273,23 @@ class GeneralController extends Controller
     }
 
     public function bookmark(Request $request){
-        cekSesi2($request);
-        
+        $this->cekSesi2($request);
+        $data['TAG'] = 'bookmark';
+        $data['list_bookmark_private'] = Bookmark::where('user_id',session('id'))->where('privasi','private')->get();
+        $data['list_bookmark_umum'] = Bookmark::with('userInfo')->where('privasi','umum')->get();
+        return view('bookmark',$data);
+    }
+
+    public function tambahBookmark(Request $request){
+        $this->cekSesi2($request);
+        $bookmark = new Bookmark();
+        $bookmark->alamat = $request->input('alamat');
+        $bookmark->tag = $request->input('tag');
+        $bookmark->judul = $request->input('judul');
+        $bookmark->privasi = $request->input('privasi');
+        $bookmark->user_id = session('id');
+        $bookmark->save();
+        return redirect('/bookmark');
     }
 
     public function presensiPerBulan(Request $request){

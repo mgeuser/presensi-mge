@@ -43,4 +43,8 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->hasMany('App\Presensi','user_id');
     }
+
+    public function listBookmark(){
+        return $this->hasMany("App\Bookmark");
+    }
 }
