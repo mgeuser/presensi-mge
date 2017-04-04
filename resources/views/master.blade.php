@@ -67,6 +67,9 @@
                         <a class="nav-link <?php if($TAG=='manajemen') echo 'active'; ?>" href="/manajemen"><i class="icon-layers"></i> Management</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link <?php if($TAG=='bookmark') echo 'active'; ?>" href="/bookmark"><i class="icon-notebook"></i> Bookmark</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link <?php if($TAG=='presensibulanan') echo 'active'; ?>" href="/presensibulanan"><i class="icon-layers"></i> Presensi Bulanan</a>
                     </li>
                     @endif

@@ -100,14 +100,18 @@ class GeneralController extends Controller
         $presensi->tahun_masuk = $now->year;
         $presensi->save();
         $data['text'] = User::find(session('id'))->username." masuk kerja pada ".\Carbon\Carbon::now();
-        // \Mail::queue('mail', $data, function($message) use($user){
-        //     $message->to("nandi.kristian@mgesolution.com", "Pak Nandi")->subject("MGE masuk ".$user->username);
-        //     $message->from(env('MAIL_USERNAME'),env("KANTOR"));
-        // });
-        // \Mail::queue('mail', $data, function($message) use($user){
-        //     $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE masuk ".$user->username);
-        //     $message->from(env('MAIL_USERNAME'),env("KANTOR"));
-        // });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("nandi.kristian@mgesolution.com", "Pak Nandi")->subject("MGE masuk ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE masuk ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE masuk ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
         return redirect()->route('beranda');
     }
 
@@ -134,6 +138,10 @@ class GeneralController extends Controller
             $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE pulang ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE pulang ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
         return redirect()->route('beranda');
     }
 
@@ -155,6 +163,10 @@ class GeneralController extends Controller
             $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE tambah user ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE tambah user ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
         return redirect('/manajemen');
     }
 
@@ -170,6 +182,10 @@ class GeneralController extends Controller
         });
         \Mail::queue('mail', $data, function($message) use($user){
             $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE hapus user ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE hapus user ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
         User::where('id',$id)->delete();
@@ -203,6 +219,10 @@ class GeneralController extends Controller
         });
         \Mail::queue('mail', $data, function($message) use($user){
             $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE update user ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE update user ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
         return redirect('/manajemen');
@@ -249,6 +269,11 @@ class GeneralController extends Controller
         $presensi->tahun_pulang = $pulang->year;
         $presensi->save();
         return redirect('/manajemen');
+    }
+
+    public function bookmark(Request $request){
+        cekSesi2($request);
+        
     }
 
     public function presensiPerBulan(Request $request){
