@@ -29,7 +29,7 @@
                                     </div>
                                     <div class="form-group col-sm-6 col-md-3">
                                         <label for="postal-code">Tag</label>
-                                        <input type="text" class="form-control" placeholder="TAG" name="tag">
+                                        <input type="text" class="form-control taginput" placeholder="TAG" name="tag">
                                     </div>
                                     <div class="form-group col-sm-6 col-md-3">
                                         <label for="postal-code">Mode</label>
@@ -79,6 +79,7 @@
                                         <td>{{$bookmark_private->tag}}</td>
                                         <td>
                                             <button class="btn btn-primary btn-sm">Edit</button>
+                                            <a href="/delete_bookmark/{{$bookmark_private->id}}" class="btn btn-danger btn-sm">Hapus</a>
                                         </td>
                                         </tr>
                                         @endforeach
@@ -122,6 +123,7 @@
                                         <td>{{$bookmark_umum->tag}}</td>
                                         <td>
                                             <button class="btn btn-primary btn-sm">Edit</button>
+                                            <a href="/delete_bookmark/{{$bookmark_umum->id}}" class="btn btn-danger btn-sm">Hapus</a>
                                         </td>
                                         </tr>
                                         @endforeach

@@ -292,6 +292,11 @@ class GeneralController extends Controller
         return redirect('/bookmark');
     }
 
+    public function deleteBookmark(Request $request, $id){
+        Bookmark::where('id',$id)->delete();
+        return redirect('/bookmark');
+    }
+
     public function presensiPerBulan(Request $request){
         $this->cekSesi3($request);
         $data['TAG'] = 'presensiperbulan';

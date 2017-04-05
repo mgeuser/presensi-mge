@@ -20,6 +20,7 @@
     <!-- Main styles for this application -->
     <link href="/css/style.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" type="text/css" href="/bootstrap-tagsinput.css">
     <style type="text/css">
         .breadcrumb-menu.hidden-md-down{
             display: none;
@@ -114,6 +115,7 @@
     <!-- <script src="/js/views/main.js"></script> -->
     <script type="text/javascript" src="/daterangepicker/moment.min.js"></script>
     <script type="text/javascript" src="/daterangepicker/daterangepicker.js"></script>
+    <script type="text/javascript" src="/bootstrap-tagsinput.min.js"></script>
     <script>
         $(".btn-will-disabled").click(function(){
             $(this).text("Sek, ojo di klik maneh, sabar \n ngko lek error lak ketok ;) ");
@@ -129,6 +131,8 @@
             timePickerIncrement: 10,
             singleDatePicker: true
         });
+
+        $(".tagsinput").tagsinput();
     </script>
     @yield('script')
 </body>
