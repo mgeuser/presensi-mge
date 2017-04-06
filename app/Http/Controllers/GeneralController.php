@@ -11,6 +11,14 @@ use App\Presensi;
 use App\Bookmark;
 class GeneralController extends Controller
 {
+    private function curlMail($url,$data){
+        $handle = curl_init($url);
+        curl_setopt($handle, CURLOPT_POST, true);
+        curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
+        curl_exec($handle);
+        $result = curl_exec($handle);
+        curl_close($handle);
+    }
 	private function cekSesi($request){
 		if($request->session()->has('login')){
     		header("Location: ".route('beranda'));
@@ -100,7 +108,8 @@ class GeneralController extends Controller
         $presensi->bulan_masuk = $now->month;
         $presensi->tahun_masuk = $now->year;
         $presensi->save();
-        $data['text'] = User::find(session('id'))->username." masuk kerja pada ".\Carbon\Carbon::now();
+        //$data['text'] = User::find(session('id'))->username." masuk kerja pada ".\Carbon\Carbon::now();
+        /*
         \Mail::queue('mail', $data, function($message) use($user){
             $message->to("nandi.kristian@mgesolution.com", "Pak Nandi")->subject("MGE masuk ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
@@ -113,9 +122,19 @@ class GeneralController extends Controller
             $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE masuk ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
+        */
+        $url = 'http://47.88.240.48/presensi_mail_curl/mailing.php';
+        $data = array('to'=>"upload.kurniawan@gmail.com",'Kurniawan' => 'MGE', 'subject' => "MGE masuk ".$user->username, "pesan"=>urlencode(User::find(session('id'))->username." masuk kerja pada ".\Carbon\Carbon::now()));
+        $this->curlMail($url,$data);
+
+        $data = array('to'=>"nandi.kristian@mgesolution.com",'Nandi' => 'MGE', 'subject' => "MGE masuk ".$user->username, "pesan"=>urlencode(User::find(session('id'))->username." masuk kerja pada ".\Carbon\Carbon::now()));
+        $this->curlMail($url,$data);
+
+        $data = array('to'=>"sindu@mgesolution.com",'nama' => 'Sindu', 'subject' => "MGE masuk ".$user->username, "pesan"=>urlencode(User::find(session('id'))->username." masuk kerja pada ".\Carbon\Carbon::now()));
+        $this->curlMail($url,$data);
+
         return redirect()->route('beranda');
     }
-
     public function pulang(Request $request)
     {
         $this->cekSesi2($request);
@@ -130,7 +149,8 @@ class GeneralController extends Controller
             $presensi->tahun_pulang = $now->year;
             $presensi->save();
         }
-        $data['text'] = User::find(session('id'))->username." pulang kerja pada ".\Carbon\Carbon::now();
+        //$data['text'] = User::find(session('id'))->username." pulang kerja pada ".\Carbon\Carbon::now();
+        /*
         \Mail::queue('mail', $data, function($message) use($user){
             $message->to("nandi.kristian@mgesolution.com", "Pak Nandi")->subject("MGE pulang ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
@@ -143,6 +163,17 @@ class GeneralController extends Controller
             $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE pulang ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
+        */
+        $url = 'http://47.88.240.48/presensi_mail_curl/mailing.php';
+        $data = array('to'=>"upload.kurniawan@gmail.com",'Kurniawan' => "MGE", 'subject' => "MGE pulang ".$user->username, "pesan"=>User::find(session('id'))->username." pulang kerja pada ".\Carbon\Carbon::now());
+        $this->curlMail($url,$data);
+        
+        $data = array('to'=>"nandi.kristian@mgesolution.com",'Nandi' => "MGE", 'subject' => "MGE pulang ".$user->username, "pesan"=>User::find(session('id'))->username." pulang kerja pada ".\Carbon\Carbon::now());
+        $this->curlMail($url,$data);
+
+        $data = array('to'=>"sindu@mgesolution.com",'nama' => "Sindu", 'subject' => "MGE pulang ".$user->username, "pesan"=>User::find(session('id'))->username." pulang kerja pada ".\Carbon\Carbon::now());
+        $this->curlMail($url,$data);
+
         return redirect()->route('beranda');
     }
 
@@ -155,7 +186,8 @@ class GeneralController extends Controller
             'role'=>$request->input('role'),
             'kantor'=>$request->input('kantor')
         ]);
-        $data['text'] = User::find(session('id'))->username." menambah user baru dengan username : ".$request->input('username').", role :  ".$request->input('role').", kantor : ".$request->input('kantor')." dan password : ".$request->input('password')." pada ".\Carbon\Carbon::now();
+        //$data['text'] = User::find(session('id'))->username." menambah user baru dengan username : ".$request->input('username').", role :  ".$request->input('role').", kantor : ".$request->input('kantor')." dan password : ".$request->input('password')." pada ".\Carbon\Carbon::now();
+        /*
         \Mail::queue('mail', $data, function($message) use($user){
             $message->to("nandi.kristian@mgesolution.com", "Pak Nandi")->subject("MGE tambah user ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
@@ -168,6 +200,17 @@ class GeneralController extends Controller
             $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE tambah user ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
+        */
+        
+        $url = 'http://47.88.240.48/presensi_mail_curl/mailing.php';
+        $data = array('to'=>"upload.kurniawan@gmail.com",'Kurniawan' => "MGE", 'subject' => "MGE tambah user ".$user->username, "pesan"=>User::find(session('id'))->username." menambah user baru dengan username : ".$request->input('username').", role :  ".$request->input('role').", kantor : ".$request->input('kantor')." dan password : ".$request->input('password')." pada ".\Carbon\Carbon::now());
+        $this->curlMail($url,$data);
+
+        $data = array('to'=>"nandi.kristian@mgesolution.com",'Nandi' => "MGE", 'subject' => "MGE tambah user ".$user->username, "pesan"=>User::find(session('id'))->username." menambah user baru dengan username : ".$request->input('username').", role :  ".$request->input('role').", kantor : ".$request->input('kantor')." dan password : ".$request->input('password')." pada ".\Carbon\Carbon::now());
+        $this->curlMail($url,$data);
+
+        $data = array('to'=>"sindu@mgesolution.com",'Sindu' => "MGE", 'subject' => "MGE tambah user ".$user->username, "pesan"=>User::find(session('id'))->username." menambah user baru dengan username : ".$request->input('username').", role :  ".$request->input('role').", kantor : ".$request->input('kantor')." dan password : ".$request->input('password')." pada ".\Carbon\Carbon::now());
+        $this->curlMail($url,$data);
         return redirect('/manajemen');
     }
 
@@ -177,6 +220,7 @@ class GeneralController extends Controller
         $username = User::find($id)->username;
         $user = User::find(session('id'));
         $data['text'] = User::find(session('id'))->username." menghapus user ".$username." pada ".\Carbon\Carbon::now();
+        /*
         \Mail::queue('mail', $data, function($message) use($user){
             $message->to("nandi.kristian@mgesolution.com", "Pak Nandi")->subject("MGE hapus user ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
@@ -189,6 +233,17 @@ class GeneralController extends Controller
             $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE hapus user ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
+        */
+        
+        $url = 'http://47.88.240.48/presensi_mail_curl/mailing.php';
+        $data = array('to'=>"upload.kurniawan@gmail.com",'Kurniawan' => "MGE", 'subject' => "MGE hapus user ".$user->username, "pesan"=>User::find(session('id'))->username." menghapus user ".$username." pada ".\Carbon\Carbon::now());
+        $this->curlMail($url,$data);
+
+        $data = array('to'=>"nandi.kristian@mgesolution.com",'Nandi' => "MGE", 'subject' => "MGE hapus user ".$user->username, "pesan"=>User::find(session('id'))->username." menghapus user ".$username." pada ".\Carbon\Carbon::now());
+        $this->curlMail($url,$data);
+
+        $data = array('to'=>"sindu@mgesolution.com",'Sindu' => "MGE", 'subject' => "MGE hapus user ".$user->username, "pesan"=>User::find(session('id'))->username." menghapus user ".$username." pada ".\Carbon\Carbon::now());
+        $this->curlMail($url,$data);
         User::where('id',$id)->delete();
         return redirect('/manajemen');
     }
@@ -213,7 +268,8 @@ class GeneralController extends Controller
             $user->password = bcrypt($request->input('password'));
         }
         $user->save();
-        $data['text'] = User::find(session('id'))->username." mengedit user ".$username." pada ".\Carbon\Carbon::now();
+        //$data['text'] = User::find(session('id'))->username." mengedit user ".$username." pada ".\Carbon\Carbon::now();
+        /*
         \Mail::queue('mail', $data, function($message) use($user){
             $message->to("nandi.kristian@mgesolution.com", "Pak Nandi")->subject("MGE update user ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
@@ -226,6 +282,17 @@ class GeneralController extends Controller
             $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE update user ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
+        */
+        
+        $url = 'http://47.88.240.48/presensi_mail_curl/mailing.php';
+        $data = array('to'=>"upload.kurniawan@gmail.com",'Kurniawan' => "MGE", 'subject' => "MGE update user ".$user->username, "pesan"=>User::find(session('id'))->username." mengedit user ".$username." pada ".\Carbon\Carbon::now());
+        $this->curlMail($url,$data);
+
+        $data = array('to'=>"nandi.kristian@mgesolution.com",'Nandi' => "MGE", 'subject' => "MGE update user ".$user->username, "pesan"=>User::find(session('id'))->username." mengedit user ".$username." pada ".\Carbon\Carbon::now());
+        $this->curlMail($url,$data);
+
+        $data = array('to'=>"sindu@mgesolution.com",'Sindu' => "MGE", 'subject' => "MGE update user ".$user->username, "pesan"=>User::find(session('id'))->username." mengedit user ".$username." pada ".\Carbon\Carbon::now());
+        $this->curlMail($url,$data);
         return redirect('/manajemen');
     }
 
