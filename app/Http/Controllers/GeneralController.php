@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Presensi;
 use App\Bookmark;
+use App\File as FileManager;
 class GeneralController extends Controller
 {
     private function curlMail($url,$data){
@@ -102,7 +103,7 @@ class GeneralController extends Controller
         $presensi->user_id = session('id');
         $user = User::find(session('id'));
         $presensi->masuk = $now;
-        $presensi->jam_pulang_temp = $next->toTimeString();
+        $presensi->jam_pulang_temp = "?";
         $presensi->jam_masuk = $now->toTimeString();
         $presensi->tanggal_masuk = $now->toDateString();
         $presensi->bulan_masuk = $now->month;
@@ -363,6 +364,63 @@ class GeneralController extends Controller
         Bookmark::where('id',$id)->delete();
         return redirect('/bookmark');
     }
+
+    public function fileServerPage(Request $request){
+        $data["TAG"] = "file_manager";
+        return view("file_manager",$data);
+    }
+
+    public function uploadFileManager(Request $request){
+        \Storage::disk('local')->put(strtotime(time()).'-'.$request->input("nama").'.'.$request->file('file')->getClientOriginalExtension(),  \File::get($request->file('file')));
+        FileManager::create([
+            'nama'=>$request->input('nama'),
+            'user_id'=>session('id'),
+            'privasi'=>$request->input('privasi')
+        ]);
+
+        $url = "http://47.88.240.48/presensi_mail_curl/file_manager_upload.php"; // e.g. http://localhost/myuploader/upload.php // request URL
+        $filename = $_FILES['file']['name'];
+        $filedata = $_FILES['file']['tmp_name'];
+        $filesize = $_FILES['file']['size'];
+        if ($filedata != '')
+        {
+            $headers = array("Content-Type:multipart/form-data"); // cURL headers for file uploading
+            $postfields = array("filedata" => "@$filedata", "filename" => $filename);
+            $ch = curl_init();
+            $options = array(
+                CURLOPT_URL => $url,
+                CURLOPT_HEADER => true,
+                CURLOPT_POST => 1,
+                CURLOPT_HTTPHEADER => $headers,
+                CURLOPT_POSTFIELDS => $postfields,
+                CURLOPT_INFILESIZE => $filesize,
+                CURLOPT_RETURNTRANSFER => true
+            ); // cURL options
+            curl_setopt_array($ch, $options);
+            curl_exec($ch);
+            if(!curl_errno($ch))
+            {
+                $info = curl_getinfo($ch);
+                if ($info['http_code'] == 200)
+                    $errmsg = "File uploaded successfully";
+            }
+            else
+            {
+                $errmsg = curl_error($ch);
+            }
+            curl_close($ch);
+        }
+        else
+        {
+            $errmsg = "Please select the file";
+        }
+        print_r($errmsg);
+        //return redirect('/file_manager');
+    }
+
+
+// BUREK
+
 
     public function presensiPerBulan(Request $request){
         $this->cekSesi3($request);

@@ -74,6 +74,9 @@
                     <li class="nav-item">
                         <a class="nav-link <?php if($TAG=='bookmark') echo 'active'; ?>" href="/bookmark"><i class="icon-notebook"></i> Bookmark</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php if($TAG=='file_manager') echo 'active'; ?>" href="/file_manager"><i class="icon-notebook"></i> File Server</a>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -136,5 +139,4 @@
     </script>
     @yield('script')
 </body>
-
 </html>
