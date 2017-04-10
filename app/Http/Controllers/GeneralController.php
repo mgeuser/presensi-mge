@@ -108,6 +108,7 @@ class GeneralController extends Controller
         $presensi->tanggal_masuk = $now->toDateString();
         $presensi->bulan_masuk = $now->month;
         $presensi->tahun_masuk = $now->year;
+        $presensi->catatan_masuk = $request->input('catatan_masuk');
         $presensi->save();
         //$data['text'] = User::find(session('id'))->username." masuk kerja pada ".\Carbon\Carbon::now();
         /*
@@ -148,6 +149,7 @@ class GeneralController extends Controller
             $presensi->tanggal_pulang = $now->toDateString();
             $presensi->bulan_pulang = $now->month;
             $presensi->tahun_pulang = $now->year;
+            $presensi->catatan_pulang = $request->input('catatan_pulang');
             $presensi->save();
         }
         //$data['text'] = User::find(session('id'))->username." pulang kerja pada ".\Carbon\Carbon::now();

@@ -121,8 +121,9 @@
     <script type="text/javascript" src="/bootstrap-tagsinput.min.js"></script>
     <script>
         $(".btn-will-disabled").click(function(){
+            $(this).val("Sek, ojo di klik maneh, sabar \n ngko lek error lak ketok ;) ");
             $(this).text("Sek, ojo di klik maneh, sabar \n ngko lek error lak ketok ;) ");
-            $(this).attr('disabled','disabled');
+            $(this).addClass('disabled');
         });
 
         $('input.singletime').daterangepicker({

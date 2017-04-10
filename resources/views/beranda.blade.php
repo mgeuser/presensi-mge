@@ -28,8 +28,12 @@
                                 <div class="col-sm-12 col-lg-12">
                                     <div class="row">
                                         <div class="col-sm-12 col-md-12">
+                                            <form action="<?=$sudah_masuk==true?'/pulang':'/masuk'?>">
                                             @if($sudah_pulang==false)
-                                            <a href="<?=$sudah_masuk==true?'/pulang':'/masuk'?>" class="btn btn-<?=$sudah_masuk==true?'danger':'primary'?> btn-lg btn-block btn-will-disabled"><?=$sudah_masuk==true?'Pulang':'Masuk'?></a>
+                                            <textarea name="catatan_<?=$sudah_masuk==true?'pulang':'masuk'?>" rows="3" class="form-control" placeholder="catatan <?=$sudah_masuk==true?'pulang':'masuk'?> bila ada"></textarea><br>
+                                            <?php /*<a href="<?=$sudah_masuk==true?'/pulang':'/masuk'?>" class="btn btn-<?=$sudah_masuk==true?'danger':'primary'?> btn-lg btn-block btn-will-disabled"><?=$sudah_masuk==true?'Pulang':'Masuk'?></a>*/ ?>
+                                            <input type="submit" class="btn btn-<?=$sudah_masuk==true?'danger':'primary'?> btn-lg btn-block btn-will-disabled" value="<?=$sudah_masuk==true?'Pulang':'Masuk'?>">
+                                            </form>
                                             @else
                                             <a href="#" class="btn btn-secondary btn-lg btn-block btn-disabled">Anda Sudah Pulang</a>
                                             @endif
