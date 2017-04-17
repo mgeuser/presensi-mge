@@ -62,7 +62,9 @@
                                                     <tr>
                                                         <th>Tanggal</th>
                                                         <th>Masuk</th>
+                                                        <th>Keterangan Masuk</th>
                                                         <th>Pulang</th>
+                                                        <th>Keterangan Pulang</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -71,12 +73,14 @@
                                                         <tr>
                                                             <td>{{$presensi->tanggal_masuk}}</td>
                                                             <td>{{substr($presensi->jam_masuk,0,5)}}</td>
+                                                            <td>{{$presensi->catatan_masuk}}</td>
                                                             <td>
                                                                 <?php
                                                                 if($presensi->jam_pulang!=null) echo substr($presensi->jam_pulang,0,5);
                                                                 else echo substr($presensi->jam_pulang_temp,0,5).' (Jam otomatis)';
                                                                 ?>
                                                             </td>
+                                                            <td>{{$presensi->catatan_pulang}}</td>
                                                         </tr>
                                                         @endforeach
                                                     @else
