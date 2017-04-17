@@ -99,7 +99,7 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="home4" role="tabpanel">
-                            <table class="table table-bordered table-striped table-condensed">
+                            <table class="table table-bordered table-striped table-condensed dataTable">
                                 <thead>
                                     <tr>
                                         <th>Username</th>
@@ -126,7 +126,7 @@
                             </table>
                         </div>
                         <div class="tab-pane" id="profile4" role="tabpanel">
-                            <table class="table table-bordered table-striped table-condensed">
+                            <table class="table table-bordered table-striped table-condensed dataTable">
                                 <thead>
                                     <tr>
                                         <th>Username</th>
@@ -242,6 +242,8 @@
 
 @section('script')
 	<script type="text/javascript">
+        $(".dataTable").DataTable();
+
 		$(".btn-edit").click(function(){
 			var id = $(this).data('id');
 			$.ajax({

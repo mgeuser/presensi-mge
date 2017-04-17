@@ -83,7 +83,8 @@ class GeneralController extends Controller
     {
         $this->cekSesi3($request);
         $data['list_user'] = User::all();
-        $data['list_presensi'] = Presensi::with('userInfo')->whereMonth('masuk','=',\Carbon\Carbon::now()->month)->orWhere(\DB::raw('DATE(masuk)','>',\Carbon\Carbon::now()->addMonths(-1)->toDateString()))->get();
+        // $data['list_presensi'] = Presensi::with('userInfo')->whereMonth('masuk','=',\Carbon\Carbon::now()->month)->orWhere(\DB::raw('DATE(masuk)','>',\Carbon\Carbon::now()->addMonths(-1)->toDateString()))->get();
+        $data['list_presensi'] = Presensi::with('userInfo')->get();
         $data['TAG'] = 'manajemen';
         return view('manajemen',$data);
     }

@@ -21,9 +21,16 @@
     <link href="/css/style.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/daterangepicker/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="/bootstrap-tagsinput.css">
+
+    <!-- Datatables -->
+    <link rel="stylesheet" type="text/css" href="/datatables/media/css/dataTables.bootstrap4.min.css">
+
     <style type="text/css">
         .breadcrumb-menu.hidden-md-down{
             display: none;
+        }
+        table.dataTable{
+            border-collapse: collapse !important;
         }
     </style>
 </head>
@@ -119,6 +126,8 @@
     <script type="text/javascript" src="/daterangepicker/moment.min.js"></script>
     <script type="text/javascript" src="/daterangepicker/daterangepicker.js"></script>
     <script type="text/javascript" src="/bootstrap-tagsinput.min.js"></script>
+    <script src="/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/datatables/media/js/DataTablesBS4.js"></script>
     <script>
         $(".btn-will-disabled").click(function(){
             $(this).val("Sek, ojo di klik maneh, sabar \n ngko lek error lak ketok ;) ");
