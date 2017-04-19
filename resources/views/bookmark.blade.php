@@ -29,7 +29,7 @@
                                     </div>
                                     <div class="form-group col-sm-6 col-md-3">
                                         <label for="postal-code">Tag</label>
-                                        <input type="text" class="form-control taginput" placeholder="TAG" name="tag">
+                                        <input type="text" class="form-control taginput" placeholder="Pisahkan dengan ;" name="tag">
                                     </div>
                                     <div class="form-group col-sm-6 col-md-3">
                                         <label for="postal-code">Mode</label>

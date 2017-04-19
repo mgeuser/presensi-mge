@@ -10,6 +10,9 @@ use App\User;
 use App\Presensi;
 use App\Bookmark;
 use App\File as FileManager;
+use App\TagBookmark;
+use App\BookmarkTag;
+
 class GeneralController extends Controller
 {
     private function curlMail($url,$data){
@@ -84,7 +87,7 @@ class GeneralController extends Controller
         $this->cekSesi3($request);
         $data['list_user'] = User::all();
         // $data['list_presensi'] = Presensi::with('userInfo')->whereMonth('masuk','=',\Carbon\Carbon::now()->month)->orWhere(\DB::raw('DATE(masuk)','>',\Carbon\Carbon::now()->addMonths(-1)->toDateString()))->get();
-        $data['list_presensi'] = Presensi::with('userInfo')->orderBy()->get();
+        $data['list_presensi'] = Presensi::with('userInfo')->orderBy('id','desc')->get();
         $data['TAG'] = 'manajemen';
         return view('manajemen',$data);
     }
@@ -355,11 +358,25 @@ class GeneralController extends Controller
         $this->cekSesi2($request);
         $bookmark = new Bookmark();
         $bookmark->alamat = $request->input('alamat');
-        $bookmark->tag = $request->input('tag');
+        $tags = $request->input('tag');
+        $tags = str_replace(["; "," ;"," ; "], ";", $tags);
+        $tags = strtolower($tags);
+        $bookmark->tag = $tags;
         $bookmark->judul = $request->input('judul');
         $bookmark->privasi = $request->input('privasi');
         $bookmark->user_id = session('id');
         $bookmark->save();
+        $tags = explode(";",$tags);
+        foreach($tags as $tag){
+            $tagBookmark = TagBookmark::where('tag',$tag)->first();
+            if($tagBookmark==null){
+                $tagBookmark = TagBookmark::create(['tag'=>$tag]);
+            }
+            BookmarkTag::create([
+                'bookmark_id'=>$bookmark->id,
+                'tag_bookmark_id'=>$tagBookmark->id
+            ]);
+        }
         return redirect('/bookmark');
     }
 
