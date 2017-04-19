@@ -116,7 +116,7 @@
                                     	<td>{{$user->kantor}}</td>
                                     	<td>
                                     		<div class="btn-group">
-                                    			<button data-toggle="modal" data-target="#largeModal" class="btn btn-primary btn-sm btn-edit" data-id="{{$user->id}}">Edit</button>
+                                    			<button onclick="getDataUser({{$user->id}})" class="btn btn-primary btn-sm btn-edit-user" data-id="{{$user->id}}">Edit</button>
                                     			<a href="/delete_user/{{$user->id}}" class="btn btn-danger btn-sm">Hapus</a>
                                     		</div>
                                     	</td>
@@ -150,7 +150,7 @@
                                         </td>
                                     	<td>
                                     		<div class="btn-group">
-                                    			<button data-toggle="modal" data-target="#largeModal2" class="btn btn-primary btn-sm btn-edit-presensi" data-id="{{$presensi->id}}">Edit</button>
+                                    			<button onclick="getDataPresensi({{$presensi->id}})" class="btn btn-primary btn-sm btn-edit-presensi" data-id="{{$presensi->id}}">Edit</button>
                                     			<a href="/delete_presensi/{{$presensi->id}}" class="btn btn-danger btn-sm">Hapus</a>
                                     		</div>
                                     	</td>
@@ -244,31 +244,39 @@
 	<script type="text/javascript">
         $(".dataTable").DataTable();
 
-		$(".btn-edit").click(function(){
-			var id = $(this).data('id');
-			$.ajax({
-				url:"/single_user/"+id,
-				method:"GET",
-				success:function(res){
-					$("#edit-username").val(res.username);
-					$("#edit-kantor").val(res.kantor);
-					$("#edit-role").val(res.role);
-					$("#largeModal").attr('action','/update_user/'+id);
-				}
-			});
-		});
+        function getDataUser (id) {
+            $(".btn-edit-user[data-id='"+id+"']").addClass("disabled");
+            $.ajax({
+                url:"/single_user/"+id,
+                method:"GET",
+                success:function(res){
+                    $("#edit-username").val(res.username);
+                    $("#edit-kantor").val(res.kantor);
+                    $("#edit-role").val(res.role);
+                    $("#largeModal").attr('action','/update_user/'+id);
+                    $("#largeModal").modal('show').on('hidden.bs.modal', function () {
+                        $("input").val("");
+                    });
+                    $(".btn-edit-user[data-id='"+id+"']").removeClass("disabled");
+                }
+            });
+        }
 
-		$(".btn-edit-presensi").click(function(){
-			var id = $(this).data('id');
-			$.ajax({
-				url:"/single_presensi/"+id,
-				method:"GET",
-				success:function(res){
-					$("#edit-masuk").val(res.masuk);
-					$("#edit-pulang").val(res.pulang);
-					$("#largeModal2").attr('action','/update_presensi/'+id);
-				}
-			});
-		})
+        function getDataPresensi (id) {
+            $(".btn-edit-presensi[data-id='"+id+"']").addClass("disabled");
+            $.ajax({
+                url:"/single_presensi/"+id,
+                method:"GET",
+                success:function(res){
+                    $("#edit-masuk").val(res.masuk);
+                    $("#edit-pulang").val(res.pulang);
+                    $("#largeModal2").attr('action','/update_presensi/'+id);
+                    $("#largeModal2").modal('show').on('hidden.bs.modal', function () {
+                        $("input").val("");
+                    });
+                    $(".btn-edit-presensi[data-id='"+id+"']").removeClass("disabled");
+                }
+            });   
+        }
 	</script>
 @stop
