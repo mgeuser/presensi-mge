@@ -316,7 +316,7 @@ class GeneralController extends Controller
         $this->cekSesi3($request);
         $presensi = Presensi::find($id);
         $masuk = \Carbon\Carbon::parse($request->input('masuk'));
-        $pulang = \Carbon\Carbon::parse($request->input('pulang'));
+
         $presensi->masuk = $masuk;
         $presensi->jam_pulang_temp = "?";
         $presensi->jam_masuk = $masuk->toTimeString();
@@ -324,11 +324,21 @@ class GeneralController extends Controller
         $presensi->bulan_masuk = $masuk->month;
         $presensi->tahun_masuk = $masuk->year;
 
-        $presensi->pulang = $pulang;
-        $presensi->jam_pulang = $pulang->toTimeString();
-        $presensi->tanggal_pulang = $pulang->toDateString();
-        $presensi->bulan_pulang = $pulang->month;
-        $presensi->tahun_pulang = $pulang->year;
+        if($request->input('pulang')!=""){
+            $pulang = \Carbon\Carbon::parse($request->input('pulang'));
+            $presensi->pulang = $pulang;
+            $presensi->jam_pulang = $pulang->toTimeString();
+            $presensi->tanggal_pulang = $pulang->toDateString();
+            $presensi->bulan_pulang = $pulang->month;
+            $presensi->tahun_pulang = $pulang->year;
+        }else{
+            $presensi->pulang = null;
+            $presensi->jam_pulang = null;
+            $presensi->tanggal_pulang = null;
+            $presensi->bulan_pulang = null;
+            $presensi->tahun_pulang = null;
+        }
+            
         $presensi->save();
         return redirect('/manajemen');
     }
