@@ -353,19 +353,21 @@ class GeneralController extends Controller
     {
         $masuk = \Carbon\Carbon::parse($request->input('masuk'));
         $pulang = \Carbon\Carbon::parse($request->input('pulang'));
-        // dd($pulang);
         $presensi = new Presensi();
         $presensi->user_id = $request->input('user_id');
         $presensi->masuk = $masuk;
-        $presensi->jam_masuk = $masuk->toTimeString();
         $presensi->tanggal_masuk = $masuk->toDateString();
         $presensi->bulan_masuk = $masuk->month;
         $presensi->tahun_masuk = $masuk->year;
         $presensi->pulang = $pulang;
-        $presensi->jam_pulang = $pulang->toTimeString();
         $presensi->tanggal_pulang = $pulang->toDateString();
         $presensi->bulan_pulang = $pulang->month;
         $presensi->tahun_pulang = $pulang->year;
+        $presensi->keterangan = $request->input('keterangan');
+        if($request->input('keterangan')==""){
+            $presensi->jam_masuk = $masuk->toTimeString();
+            $presensi->jam_pulang = $pulang->toTimeString();
+        }
         $presensi->save();
         return redirect('/manajemen');
     }

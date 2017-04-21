@@ -72,6 +72,15 @@
                                         <label for="postal-code">Pulang</label>
                                         <input type="text" autocomplete="false" class="form-control singletime" placeholder="Waktu Pulang" name="pulang">
                                     </div>
+                                    <div class="form-group col-sm-12">
+                                        <label for="postal-code">Keterangan</label>
+                                        <select class="form-control" name="keterangan">
+                                            <option value="">Biarkan jika masuk</option>
+                                            <option value="Cuti">Cuti</option>
+                                            <option value="Izin">Izin</option>
+                                            <option value="Tidak Masuk">Tidak Masuk</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12">
@@ -141,12 +150,22 @@
                                     <tr>
                                     	<td>{{$presensi->userInfo->username}}</td>
                                         <td>{{$presensi->tanggal_masuk}}</td>
-                                    	<td>{{substr($presensi->jam_masuk,0,5)}}</td>
                                     	<td>
+                                            @if($presensi->keterangan==null)
+                                            {{substr($presensi->jam_masuk,0,5)}}
+                                            @else
+                                            <strong>{{$presensi->keterangan}}</strong>
+                                            @endif
+                                        </td>
+                                    	<td>
+                                            @if($presensi->keterangan==null)
                                             <?php
                                             if($presensi->jam_pulang!=null) echo substr($presensi->jam_pulang,0,5);
                                             else echo substr($presensi->jam_pulang_temp,0,5).' (Jam otomatis)';
                                             ?>
+                                            @else
+                                            <strong>{{$presensi->keterangan}}</strong>
+                                            @endif
                                         </td>
                                     	<td>
                                     		<div class="btn-group">
