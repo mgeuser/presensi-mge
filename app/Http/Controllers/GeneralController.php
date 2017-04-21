@@ -357,7 +357,6 @@ class GeneralController extends Controller
         $presensi = new Presensi();
         $presensi->user_id = $request->input('user_id');
         $presensi->masuk = $masuk;
-        $presensi->jam_pulang_temp = $masuk->addHours(8);
         $presensi->jam_masuk = $masuk->toTimeString();
         $presensi->tanggal_masuk = $masuk->toDateString();
         $presensi->bulan_masuk = $masuk->month;
