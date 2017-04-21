@@ -248,6 +248,15 @@
                         <label for="postal-code">Pulang</label>
                         <input type="text" id="edit-pulang" autocomplete="false" class="form-control" placeholder="Pulang" name="pulang">
                     </div>
+                    <div class="form-group col-sm-12">
+                        <label for="postal-code">Keterangan</label>
+                        <select class="form-control" id="edit-keterangan" name="keterangan">
+                            <option value="">Biarkan kosong jika masuk</option>
+                            <option value="Cuti">Cuti</option>
+                            <option value="Izin">Izin</option>
+                            <option value="Tidak Masuk">Tidak Masuk</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -289,6 +298,7 @@
                 success:function(res){
                     $("#edit-masuk").val(res.masuk);
                     $("#edit-pulang").val(res.pulang);
+                    $("#edit-keterangan").val(res.keterangan);
                     $("#largeModal2").attr('action','/update_presensi/'+id);
                     $("#largeModal2").modal('show').on('hidden.bs.modal', function () {
                         $("input").val("");

@@ -338,7 +338,7 @@ class GeneralController extends Controller
             $presensi->bulan_pulang = null;
             $presensi->tahun_pulang = null;
         }
-            
+        $presensi->keterangan = $request->input('keterangan');
         $presensi->save();
         return redirect('/manajemen');
     }
