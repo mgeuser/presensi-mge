@@ -141,7 +141,7 @@
             },
             timePicker24Hour:true,
             timePicker: true,
-            timePickerIncrement: 10,
+            timePickerIncrement: 1,
             singleDatePicker: true
         });
 

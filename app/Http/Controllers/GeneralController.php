@@ -69,7 +69,7 @@ class GeneralController extends Controller
     {
         $this->cekSesi2($request);
         $data['TAG'] = 'beranda';
-        $data['list_presensi'] = Presensi::where('user_id',session('id'))->where('bulan_masuk',\Carbon\Carbon::now()->month)->get();
+        $data['list_presensi'] = Presensi::where('user_id',session('id'))->where('bulan_masuk',\Carbon\Carbon::now()->month)->orderBy('tanggal_masuk','desc')->get();
         $presensi = Presensi::where('user_id',session('id'))->whereRaw('Date(masuk) = CURDATE()')->first();
         $data['sudah_masuk'] = false;
         $data['sudah_pulang'] = false;
@@ -121,13 +121,14 @@ class GeneralController extends Controller
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
         \Mail::queue('mail', $data, function($message) use($user){
-            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE masuk ".$user->username);
-            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
-        });
-        \Mail::queue('mail', $data, function($message) use($user){
             $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE masuk ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE masuk ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
+        
         
         // $url = 'http://47.88.240.48/presensi_mail_curl/mailing.php';
         // $data = array('to'=>"upload.kurniawan@gmail.com",'Kurniawan' => 'MGE', 'subject' => "MGE masuk ".$user->username, "pesan"=>urlencode(User::find(session('id'))->username." masuk kerja pada ".\Carbon\Carbon::now()));
@@ -163,13 +164,14 @@ class GeneralController extends Controller
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
         \Mail::queue('mail', $data, function($message) use($user){
-            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE pulang ".$user->username);
-            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
-        });
-        \Mail::queue('mail', $data, function($message) use($user){
             $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE pulang ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE pulang ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
+        
         
         // $url = 'http://47.88.240.48/presensi_mail_curl/mailing.php';
         // $data = array('to'=>"upload.kurniawan@gmail.com",'Kurniawan' => "MGE", 'subject' => "MGE pulang ".$user->username, "pesan"=>User::find(session('id'))->username." pulang kerja pada ".\Carbon\Carbon::now());
@@ -200,13 +202,14 @@ class GeneralController extends Controller
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
         \Mail::queue('mail', $data, function($message) use($user){
-            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE tambah user ".$user->username);
-            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
-        });
-        \Mail::queue('mail', $data, function($message) use($user){
             $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE tambah user ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE tambah user ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
+        
         
         
         // $url = 'http://47.88.240.48/presensi_mail_curl/mailing.php';
@@ -233,13 +236,14 @@ class GeneralController extends Controller
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
         \Mail::queue('mail', $data, function($message) use($user){
-            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE hapus user ".$user->username);
-            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
-        });
-        \Mail::queue('mail', $data, function($message) use($user){
             $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE hapus user ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE hapus user ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
+        
         
         
         // $url = 'http://47.88.240.48/presensi_mail_curl/mailing.php';
@@ -282,13 +286,14 @@ class GeneralController extends Controller
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
         \Mail::queue('mail', $data, function($message) use($user){
-            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE update user ".$user->username);
-            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
-        });
-        \Mail::queue('mail', $data, function($message) use($user){
             $message->to("sindu@mgesolution.com", "Sindu")->subject("MGE update user ".$user->username);
             $message->from(env('MAIL_USERNAME'),env("KANTOR"));
         });
+        \Mail::queue('mail', $data, function($message) use($user){
+            $message->to("upload.kurniawan@gmail.com", "Developer")->subject("MGE update user ".$user->username);
+            $message->from(env('MAIL_USERNAME'),env("KANTOR"));
+        });
+        
         
         
         // $url = 'http://47.88.240.48/presensi_mail_curl/mailing.php';
