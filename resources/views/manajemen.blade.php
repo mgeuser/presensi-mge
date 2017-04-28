@@ -147,39 +147,62 @@
                                 </thead>
                                 <tbody>
                                     @foreach($list_presensi as $presensi)
-                                    <tr>
-                                    	<td>{{$presensi->userInfo->username}}</td>
-                                        <td>{{$presensi->tanggal_masuk}}</td>
-                                    	<td>
-                                            @if($presensi->keterangan==null)
-                                            {{substr($presensi->jam_masuk,0,5)}}
-                                            @else
-                                            <strong>{{$presensi->keterangan}}</strong>
-                                            @endif
-                                        </td>
-                                    	<td>
-                                            @if($presensi->keterangan==null)
-                                            <?php
-                                            if($presensi->jam_pulang!=null) echo substr($presensi->jam_pulang,0,5);
-                                            else echo substr($presensi->jam_pulang_temp,0,5).' (Jam otomatis)';
-                                            ?>
-                                            @else
-                                            <strong>{{$presensi->keterangan}}</strong>
-                                            @endif
-                                        </td>
-                                    	<td>
-                                    		<div class="btn-group">
-                                    			<button onclick="getDataPresensi({{$presensi->id}})" class="btn btn-primary btn-sm btn-edit-presensi" data-id="{{$presensi->id}}">Edit</button>
-                                    			<a href="/delete_presensi/{{$presensi->id}}" class="btn btn-danger btn-sm">Hapus</a>
-                                    		</div>
-                                    	</td>
-                                    </tr>
+                                        @if($presensi->userInfo!=null)
+                                        <tr>
+                                        	<td>{{$presensi->userInfo->username}}</td>
+                                            <td>{{$presensi->tanggal_masuk}}</td>
+                                        	<td>
+                                                @if($presensi->keterangan==null)
+                                                {{substr($presensi->jam_masuk,0,5)}}
+                                                @else
+                                                <strong>{{$presensi->keterangan}}</strong>
+                                                @endif
+                                            </td>
+                                        	<td>
+                                                @if($presensi->keterangan==null)
+                                                <?php
+                                                if($presensi->jam_pulang!=null) echo substr($presensi->jam_pulang,0,5);
+                                                else echo substr($presensi->jam_pulang_temp,0,5).' (Jam otomatis)';
+                                                ?>
+                                                @else
+                                                <strong>{{$presensi->keterangan}}</strong>
+                                                @endif
+                                            </td>
+                                        	<td>
+                                        		<div class="btn-group">
+                                        			<button onclick="getDataPresensi({{$presensi->id}})" class="btn btn-primary btn-sm btn-edit-presensi" data-id="{{$presensi->id}}">Edit</button>
+                                        			<a href="/delete_presensi/{{$presensi->id}}" class="btn btn-danger btn-sm">Hapus</a>
+                                        		</div>
+                                        	</td>
+                                        </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                         <div class="tab-pane" id="export" role="tabpanel">
-                            <iframe src="/export_table" style="width:100%;height: 500px;"></iframe>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input type="text" id="start" class="form-control single" placeholder="Start">
+                                        <button id="clear-start-btn" class="input-group-addon btn-primary">clear
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input id="end" placeholder="end" type="text" class="form-control single">
+                                        <button id="clear-end-btn" class="input-group-addon btn-primary">clear
+                                        </button>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-md-3">
+                                    <button id="filter" type="button" class="btn btn-primary">Filter</button>
+                                </div>
+                            </div>
+                            <br>
+                            <iframe id="frame" src="/export_table" style="width:100%;height: 500px;"></iframe>
                         </div>
                     </div>
                 </div>
@@ -270,7 +293,25 @@
 
 @section('script')
 	<script type="text/javascript">
+        $(document).ready(function(){
+            $("#start").val("");
+            $("#end").val("");
+        });
+
         $(".dataTable").DataTable();
+
+        $("#filter").click(function(){
+            var start = $("#start").val();
+            var end = $("#end").val();
+            $("#frame").attr("src","/export_table?start="+start+"&end="+end);
+        });
+
+        $("#clear-start-btn").click(function(){
+            $("#start").val("");
+        });
+        $("#clear-end-btn").click(function(){
+            $("#end").val("");
+        });
 
         function getDataUser (id) {
             $(".btn-edit-user[data-id='"+id+"']").addClass("disabled");

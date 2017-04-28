@@ -74,8 +74,8 @@ class GeneralController extends Controller
         $data['sudah_masuk'] = false;
         $data['sudah_pulang'] = false;
         if($presensi!=null){
-            if($presensi->pulang!=null){
-                $data['sudah_pulang'] = true;   
+            if($presensi->pulang!=null && $presensi->jam_pulang!="00:00:00" && $presensi->jam_pulang!=null){
+                $data['sudah_pulang'] = true;
             }
             $data['sudah_masuk'] = true;
         }
@@ -506,29 +506,23 @@ class GeneralController extends Controller
 
     public function exportTable(Request $request){
         $this->cekSesi3($request);
-        $data['allData'] = User::with('listPresensi')->whereHas('listPresensi',function($q){
-            $q->whereMonth('masuk','=',\Carbon\Carbon::now()->month)->orWhere(\DB::raw('DATE(masuk)','>',\Carbon\Carbon::now()->addMonths(-1)->toDateString()));
-        })->get();
-        // dd($data['allData']);
+
+        $dataPresensi = Presensi::join('new_user','new_presensi.user_id','=','new_user.id');
+        if($request->input('start')!=null){
+            if($request->input('start')!=""){
+                $dataPresensi = $dataPresensi->whereDate('tanggal_masuk','>=',$request->input('start'));
+            }
+        }
+        if($request->input('end')!=null){
+            if($request->input('end')!=""){
+                $dataPresensi = $dataPresensi->whereDate('tanggal_masuk','<=',$request->input('end'));
+            }
+        }
+        $dataPresensi = $dataPresensi->get();
+        $data['allData'] = collect($dataPresensi)->groupBy('username');
+        
         return view('export_table',$data);
-        // $presensi = Presensi::where('user_id',1)->where('tanggal_pulang','<>','null')->get();
-        // echo "<div style='display:inline-table;margin-right:10px;'>";
-        //     foreach($presensi as $p){
-        //         echo $p->tanggal_masuk;
-        //         echo "<br>";
-        //         echo "<br>";
-        //         echo "<br>";
-        //         echo "<br>";
-        //     }
-        // echo "</div>";
-        // echo "<div style='display:inline-table;'>";
-        //     foreach($presensi as $p){
-        //         echo str_replace(":",",",substr($p->jam_masuk,0,5))."<br>";
-        //         echo "00,00<br>";
-        //         echo "00,00<br>";
-        //         echo str_replace(":",",",substr($p->jam_pulang,0,5))."<br>";
-        //     }
-        // echo "</div>";
+
     }
 
     public function normalisasi(Request $request)

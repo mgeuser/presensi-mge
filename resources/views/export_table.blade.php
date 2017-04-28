@@ -14,7 +14,7 @@
 	</style>
 </head>
 <body>
-	@foreach($allData as $data)
+	@foreach($allData as $username=>$data)
 	<div style="display: inline-table;margin-right: 10px;">
 		<?php /*
 		<h2>{{$data->username}}</h2>
@@ -35,16 +35,22 @@
 		*/ ?>
 		<table>
 			<tr>
-				<th colspan="2">{{$data->username}}</th>
+				<th colspan="2">{{$username	}}</th>
 			</tr>
 			<tr>
 				<th>Tanggal</th>
 				<th>Waktu</th>
 			</tr>
-			@foreach($data->listPresensi as $presensi)
+			@foreach($data as $presensi)
 			<tr>
 				<td>{{$presensi->tanggal_masuk}}</td>
-				<td>{{str_replace(":",",",substr($presensi->jam_masuk,0,5))}}</td>
+				<td>
+					@if($presensi->keterangan==null || $presensi->keterangan=="")
+					{{str_replace(":",",",substr($presensi->jam_masuk,0,5))}}
+					@else
+					{{$presensi->keterangan}}
+					@endif
+				</td>
 			</tr>
 			<tr>
 				<td></td>

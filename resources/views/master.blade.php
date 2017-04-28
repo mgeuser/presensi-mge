@@ -137,13 +137,26 @@
 
         $('input.singletime').daterangepicker({
             locale: {
-                format: 'YYYY-MM-DD HH:mm'
+                format: 'YYYY-MM-DD HH:mm',
+                cancelLabel: 'Clear'
             },
             timePicker24Hour:true,
             timePicker: true,
             timePickerIncrement: 1,
             singleDatePicker: true
+        }).on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
         });
+
+        $('input.single').daterangepicker({
+            locale: {
+                format: 'YYYY-MM-DD',
+                cancelLabel: 'Clear'
+            },
+            singleDatePicker: true
+        }).on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });;
 
         $(".tagsinput").tagsinput();
     </script>
