@@ -85,7 +85,7 @@
                                                         @endforeach
                                                     @else
                                                         <tr>
-                                                            <td colspan="3">Tidak ada data presensi</td>
+                                                            <td colspan="5">Tidak ada data presensi</td>
                                                         </tr>
                                                     @endif
                                                 </tbody>

@@ -518,7 +518,7 @@ class GeneralController extends Controller
                 $dataPresensi = $dataPresensi->whereDate('tanggal_masuk','<=',$request->input('end'));
             }
         }
-        $dataPresensi = $dataPresensi->get();
+        $dataPresensi = $dataPresensi->orderBy('masuk','asc')->get();
         $data['allData'] = collect($dataPresensi)->groupBy('username');
         
         return view('export_table',$data);
