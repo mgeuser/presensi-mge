@@ -72,13 +72,23 @@
                                                         @foreach($list_presensi as $presensi)
                                                         <tr>
                                                             <td>{{$presensi->tanggal_masuk}}</td>
-                                                            <td>{{substr($presensi->jam_masuk,0,5)}}</td>
+                                                            <td>
+                                                                <?php if($presensi->keterangan!=null || $presensi->keterangan!=""){ ?>
+                                                                    {{$presensi->keterangan}}
+                                                                <?php }else{ ?>
+                                                                    {{substr($presensi->jam_masuk,0,5)}}
+                                                                <?php } ?>
+                                                            </td>
                                                             <td>{{$presensi->catatan_masuk}}</td>
                                                             <td>
-                                                                <?php
-                                                                if($presensi->jam_pulang!=null) echo substr($presensi->jam_pulang,0,5);
-                                                                else echo substr($presensi->jam_pulang_temp,0,5).' (Jam otomatis)';
-                                                                ?>
+                                                                <?php if($presensi->keterangan!=null || $presensi->keterangan!=""){ ?>
+                                                                    {{$presensi->keterangan}}
+                                                                <?php }else{ ?>
+                                                                    <?php
+                                                                    if($presensi->jam_pulang!=null) echo substr($presensi->jam_pulang,0,5);
+                                                                    else echo substr($presensi->jam_pulang_temp,0,5).' (Jam otomatis)';
+                                                                    ?>
+                                                                <?php } ?>
                                                             </td>
                                                             <td>{{$presensi->catatan_pulang}}</td>
                                                         </tr>

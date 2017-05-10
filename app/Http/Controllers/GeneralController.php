@@ -100,6 +100,9 @@ class GeneralController extends Controller
 
     public function masuk(Request $request)
     {
+        // dd(\Carbon\Carbon::now()->toDateString());
+        $p = Presensi::where('tanggal_masuk',\Carbon\Carbon::now()->toDateString())->where('user_id',session('id'))->first();
+        if($p!=null) return redirect('/');
         $this->cekSesi2($request);
         $now = \Carbon\Carbon::now();
         $next = \Carbon\Carbon::now()->addHours(8);
