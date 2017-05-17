@@ -74,7 +74,7 @@ class GeneralController extends Controller
         $data['sudah_masuk'] = false;
         $data['sudah_pulang'] = false;
         if($presensi!=null){
-            if($presensi->pulang!=null && $presensi->jam_pulang!="00:00:00" && $presensi->jam_pulang!=null){
+            if($presensi->pulang!=null && $presensi->jam_pulang!="00:00:00"){
                 $data['sudah_pulang'] = true;
             }
             $data['sudah_masuk'] = true;
@@ -149,16 +149,18 @@ class GeneralController extends Controller
     {
         $this->cekSesi2($request);
         $now = \Carbon\Carbon::now();
-        $presensi = Presensi::where('user_id',session('id'))->whereRaw('Date(masuk) = CURDATE()')->where('pulang','=',null)->first();
+        $presensi = Presensi::where('user_id',session('id'))->whereRaw('Date(masuk) = CURDATE()')->first();
         $user = User::find(session('id'));
         if($presensi!=null){
-            $presensi->pulang = $now;
-            $presensi->jam_pulang = $now->toTimeString();
-            $presensi->tanggal_pulang = $now->toDateString();
-            $presensi->bulan_pulang = $now->month;
-            $presensi->tahun_pulang = $now->year;
-            $presensi->catatan_pulang = $request->input('catatan_pulang');
-            $presensi->save();
+            if($presensi->jam_pulang==null || $presensi->jam_pulang=="00:00:00"){
+                $presensi->pulang = $now;
+                $presensi->jam_pulang = $now->toTimeString();
+                $presensi->tanggal_pulang = $now->toDateString();
+                $presensi->bulan_pulang = $now->month;
+                $presensi->tahun_pulang = $now->year;
+                $presensi->catatan_pulang = $request->input('catatan_pulang');
+                $presensi->save();
+            }
         }
         $data['text'] = User::find(session('id'))->username." pulang kerja pada ".\Carbon\Carbon::now();
         
