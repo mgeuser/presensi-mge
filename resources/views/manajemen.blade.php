@@ -142,6 +142,8 @@
                                         <th>Tanggal</th>
                                         <th>Masuk</th>
                                         <th>Pulang</th>
+                                        <th>Ket Masuk</th>
+                                        <th>Ket Pulang</th>
                                         <th width="5%"></th>
                                     </tr>
                                 </thead>
@@ -167,6 +169,12 @@
                                                 @else
                                                 <strong>{{$presensi->keterangan}}</strong>
                                                 @endif
+                                            </td>
+                                            <td>
+                                                {{$presensi->catatan_masuk or ''}}
+                                            </td>
+                                            <td>
+                                                {{$presensi->catatan_pulang or ''}}
                                             </td>
                                         	<td>
                                         		<div class="btn-group">
