@@ -64,8 +64,12 @@
 				<td></td>
 				<td>
 				<?php
-				if($presensi->pulang != null && $presensi->pulang != "") echo str_replace(":",",",substr($presensi->jam_pulang,0,5));
-				else echo "<span style='color:red;'>".str_replace(":",",",substr($presensi->jam_pulang_temp,0,5))."</span>";
+				if($presensi->keterangan!=null){
+					echo "00.00";
+				}else{
+					if($presensi->pulang != null && $presensi->pulang != "") echo str_replace(":",",",substr($presensi->jam_pulang,0,5));
+					else echo "<span style='color:red;'>".str_replace(":",",",substr($presensi->jam_pulang_temp,0,5))."</span>";
+				}
 				?>
 				</td>
 			</tr>
