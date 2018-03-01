@@ -69,7 +69,7 @@ class GeneralController extends Controller
     {
         $this->cekSesi2($request);
         $data['TAG'] = 'beranda';
-        $data['list_presensi'] = Presensi::where('user_id',session('id'))->where('bulan_masuk',\Carbon\Carbon::now()->month)->orderBy('tanggal_masuk','desc')->get();
+        $data['list_presensi'] = Presensi::where('user_id',session('id'))->where('bulan_masuk',\Carbon\Carbon::now()->month)->whereYear('tanggal_masuk','=',\Carbon\Carbon::now()->year)->orderBy('tanggal_masuk','desc')->get();
         $presensi = Presensi::where('user_id',session('id'))->whereRaw('Date(masuk) = CURDATE()')->first();
         $data['sudah_masuk'] = false;
         $data['sudah_pulang'] = false;
